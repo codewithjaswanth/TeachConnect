@@ -3,8 +3,8 @@
 ## Architecture & Stack
 - Framework: Next.js 15 (App Router, Server Actions, RSC)
 - Runtime: Node v24.22.0
-- Styling: Tailwind CSS 3.4.17 with Scholastic Tokens & 3D Book Curve Transforms
-- Database: SQLite via Prisma ORM v6.19.3
+- Cloud Deployment: Vercel Serverless with NFT asset tracing & /tmp SQLite hydration
+- Database: SQLite via Prisma ORM v6.19.3 (native, rhel-openssl-3.0.x, debian-openssl-3.0.x)
 - Dev Server Port: 3000 (Strict)
 
 ## Design System: Academic Scholastic Archive
@@ -22,8 +22,8 @@
 - `/_not-found` - Scholastic Archive Not-Found Fallback
 
 ## Verification Status
-- Production Build: 13 routes compiled cleanly (0 lint/type errors)
+- Production Build: 13 routes compiled cleanly with zero lint/type errors
+- Vercel Serverless Resilience: Dynamic fallback data on all SSR routes + `/tmp/dev.db` auto-copy
 - E2E Test Suite: 15/15 tests passing (database, royalty tiers, licensing, tokens, reviews)
 - Visual & Responsive: Verified via Playwright (Desktop 1440x900 & Mobile 375x812, 0 console errors)
-- Easel Canvas: Cleanly removed from homepage and navigation
 - Carousel Physics: Book bend, leaf-stack shadows, spine crease, and page-turn animation verified

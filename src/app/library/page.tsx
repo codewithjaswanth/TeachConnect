@@ -15,9 +15,14 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function LibraryPage() {
-  const items = await prisma.libraryItem.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  let items: any[] = [];
+  try {
+    items = await prisma.libraryItem.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (err) {
+    console.error("LibraryPage: failed to fetch library items", err);
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10 bg-paper-100 min-h-screen font-sans">
