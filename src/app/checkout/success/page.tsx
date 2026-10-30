@@ -11,6 +11,8 @@ import {
   ShieldCheck,
   Receipt,
   FileText,
+  School,
+  Sparkles,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -55,39 +57,39 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   });
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10 font-sans">
       {/* Success Hero Header */}
-      <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 text-center space-y-4">
-        <div className="w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
-          <CheckCircle2 className="w-10 h-10" />
+      <div className="bg-[#E4E9DC] border border-[#C7D4B8] rounded-3xl p-8 text-center space-y-4 shadow-editorial-xs">
+        <div className="w-16 h-16 bg-[#2D3A22] text-[#FAF9F5] rounded-2xl flex items-center justify-center mx-auto shadow-editorial-sm">
+          <CheckCircle2 className="w-9 h-9 text-[#E9DAA2]" />
         </div>
-        <h1 className="text-3xl font-black text-emerald-950">
-          Order Confirmed! Your Resources are Ready
+        <h1 className="text-3xl font-serif font-black text-[#1C1E18]">
+          Order Confirmed! Resources Archived to Your Vault
         </h1>
-        <p className="text-xs sm:text-sm text-emerald-800 max-w-lg mx-auto">
-          Thank you for your order, <span className="font-bold">{order.user.name}</span>. A receipt and download links have been sent to{" "}
-          <span className="font-bold underline">{order.user.email}</span>.
+        <p className="text-xs sm:text-sm text-[#4D5244] max-w-lg mx-auto leading-relaxed">
+          Thank you for your order, <span className="font-bold text-[#1C1E18]">{order.user.name}</span>. An itemized invoice receipt and download links have been delivered to{" "}
+          <span className="font-semibold text-[#1C1E18] underline">{order.user.email}</span>.
         </p>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-emerald-800 rounded-full text-xs font-mono font-bold border border-emerald-300">
-          <Receipt className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#FAF9F5] text-[#2D3A22] rounded-full text-xs font-mono font-bold border border-[#C7D4B8] shadow-2xs">
+          <Receipt className="w-3.5 h-3.5 text-[#9C7A3C]" />
           <span>Order #{order.orderNumber}</span>
         </div>
       </div>
 
       {/* Immediate Download Vault Cards */}
-      <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-xs space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+      <div className="bg-[#FAF9F5] rounded-3xl border border-[#DDD4C1] p-6 sm:p-8 shadow-editorial-xs space-y-6">
+        <div className="flex items-center justify-between pb-4 border-b border-[#EAE4D5]">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Your Download Vault</h2>
-            <p className="text-xs text-gray-500">Click below to download un-watermarked curriculum files</p>
+            <h2 className="text-lg font-serif font-bold text-[#1C1E18]">Your Immediate Download Vault</h2>
+            <p className="text-xs text-[#686E5D]">Download un-watermarked master curriculum packages below</p>
           </div>
           <Link
             href="/library"
-            className="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1"
+            className="text-xs font-bold text-[#2D3A22] hover:text-[#3B4D2B] flex items-center gap-1 group"
           >
-            <span>View All in My Library</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>View All in Library</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
@@ -99,26 +101,28 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             return (
               <div
                 key={item.id}
-                className="p-5 rounded-2xl border border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                className="p-5 rounded-2xl border border-[#DDD4C1] bg-[#F3EFE6] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <img
                     src={item.product.coverImageUrl}
                     alt={item.product.title}
-                    className="w-16 h-16 rounded-xl object-cover bg-gray-100 flex-shrink-0 border border-gray-200"
+                    className="w-16 h-16 rounded-xl object-cover bg-[#FAF9F5] flex-shrink-0 border border-[#DDD4C1]"
                   />
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-gray-900 truncate">{item.product.title}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <h3 className="text-sm font-serif font-bold text-[#1C1E18] truncate">
+                      {item.product.title}
+                    </h3>
+                    <p className="text-xs text-[#686E5D] mt-0.5">
                       By {item.product.seller.storeName} • {item.licenseType === "SCHOOL_SEAT" ? `${item.seatCount} School Seats` : "Classroom License"}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       {item.product.files.map((f) => (
                         <span
                           key={f.id}
-                          className="text-[10px] font-medium bg-white text-gray-700 px-2 py-0.5 rounded border border-gray-200 flex items-center gap-1"
+                          className="text-[10px] font-medium bg-[#FAF9F5] text-[#2D3A22] px-2.5 py-0.5 rounded-md border border-[#DDD4C1] flex items-center gap-1"
                         >
-                          <FileText className="w-3 h-3 text-primary-600" />
+                          <FileText className="w-3 h-3 text-[#2D3A22]" />
                           <span>{f.fileName}</span>
                         </span>
                       ))}
@@ -130,7 +134,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                   <a
                     href={`/api/download/${downloadToken}`}
                     download
-                    className="flex-1 sm:flex-initial px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition"
+                    className="flex-1 sm:flex-initial px-5 py-2.5 bg-[#2D3A22] hover:bg-[#3B4D2B] text-[#FAF9F5] rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-editorial-xs transition border border-[#222C1A]"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download Files</span>
@@ -144,15 +148,15 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
       {/* Order Summary & Lifetime Access Notice */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="p-5 bg-white rounded-2xl border border-gray-200 text-xs text-gray-600 space-y-2">
-          <h4 className="font-bold text-gray-900 text-sm mb-2">Order Information</h4>
+        <div className="p-6 bg-[#FAF9F5] rounded-2xl border border-[#DDD4C1] text-xs text-[#4D5244] space-y-2.5 shadow-editorial-xs">
+          <h3 className="font-serif font-bold text-[#1C1E18] text-sm mb-2">Order Information</h3>
           <div className="flex justify-between">
             <span>Payment Method:</span>
-            <span className="font-semibold text-gray-900">{order.paymentMethod}</span>
+            <span className="font-semibold text-[#1C1E18]">{order.paymentMethod}</span>
           </div>
           <div className="flex justify-between">
             <span>Total Paid:</span>
-            <span className="font-bold text-gray-900">{formatPrice(order.totalAmountCents)}</span>
+            <span className="font-bold text-[#1C1E18] tabular-nums">{formatPrice(order.totalAmountCents)}</span>
           </div>
           <div className="flex justify-between">
             <span>Order Date:</span>
@@ -160,17 +164,16 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           </div>
         </div>
 
-        <div className="p-5 bg-white rounded-2xl border border-gray-200 text-xs text-gray-600 space-y-2">
-          <div className="flex items-center gap-1.5 text-emerald-800 font-bold text-sm mb-1">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Lifetime Curriculum Access</span>
+        <div className="p-6 bg-[#FAF9F5] rounded-2xl border border-[#DDD4C1] text-xs text-[#4D5244] space-y-2 shadow-editorial-xs">
+          <div className="flex items-center gap-1.5 text-[#2D3A22] font-bold text-sm mb-1">
+            <ShieldCheck className="w-4 h-4 text-[#2D3A22]" />
+            <span>Lifetime Curriculum Protection</span>
           </div>
           <p className="leading-relaxed">
-            All resources are stored permanently in your TeachConnect account. Whenever the Teacher-Author updates this unit, you receive the latest files for free.
+            All curriculum packages are permanently linked to your account. Whenever author-teachers release revised editions or additional supplementary files, you receive free lifetime downloads.
           </p>
         </div>
       </div>
     </div>
   );
 }
-

@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   FileText,
   Sparkles,
+  Check,
 } from "lucide-react";
 
 interface ProductPurchaseCardProps {
@@ -51,10 +52,11 @@ export function ProductPurchaseCard({
   const [licenseType, setLicenseType] = useState<"SINGLE_USER" | "SCHOOL_SEAT">("SINGLE_USER");
   const [seatCount, setSeatCount] = useState(1);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [addedAnimation, setAddedAnimation] = useState(false);
 
   const isInCart = items.some((item) => item.productId === productId);
 
-  // Calculate price based on licenses
+  // Calculate pricing based on volume seats
   const calculateTotal = () => {
     if (isFree) return 0;
     if (licenseType === "SCHOOL_SEAT" && seatCount > 1) {
@@ -78,6 +80,8 @@ export function ProductPurchaseCard({
       licenseType,
       seatCount,
     });
+    setAddedAnimation(true);
+    setTimeout(() => setAddedAnimation(false), 2000);
   };
 
   const handleBuyNow = () => {
@@ -95,44 +99,46 @@ export function ProductPurchaseCard({
   };
 
   return (
-    <div className="bg-[#FAF7EE] rounded-3xl border border-[#A38345]/30 p-6 shadow-md space-y-6 sticky top-24">
+    <div className="bg-paper-50 rounded-3xl border border-paper-400 p-6 shadow-editorial space-y-6 sticky top-28 font-sans">
       {/* Price Header */}
       <div>
         <div className="flex items-baseline justify-between">
-          <span className="text-3xl font-serif font-black text-[#28291F]">
-            {formatPrice(totalPriceCents)}
+          <span className="text-3xl font-sans font-black text-ink-900 tabular-nums">
+            {isFree ? "Free" : formatPrice(totalPriceCents)}
           </span>
-          {isFree && (
-            <span className="px-3 py-1 bg-[#9CA763] text-[#28291F] text-xs font-serif font-bold rounded-lg border border-[#4F5B32]/20">
-              Complimentary
+          {isFree ? (
+            <span className="px-3 py-1 bg-forest-100 text-forest-800 text-xs font-bold rounded-lg border border-forest-200">
+              Complimentary Folio
             </span>
+          ) : (
+            <span className="text-xs text-ink-500 font-medium">Digital Download</span>
           )}
         </div>
-        <p className="text-xs font-serif text-[#555745] mt-1">
+        <p className="text-xs text-ink-600 mt-1">
           {licenseType === "SINGLE_USER"
-            ? "Single educator classroom license"
-            : `${seatCount} transferable school department license seats`}
+            ? "Single educator classroom license (lifetime personal access)"
+            : `${seatCount} transferable school department licenses (15% seat discount)`}
         </p>
       </div>
 
-      {/* License Selector (if not free) */}
+      {/* Licensing Engine */}
       {!isFree && (
-        <div className="space-y-3 pt-3 border-t border-[#F1E8C7]">
-          <h4 className="text-xs font-serif font-bold uppercase text-[#4F5B32] tracking-wider">
-            Select Scholastic License
+        <div className="space-y-3 pt-3 border-t border-paper-300">
+          <h4 className="text-[11px] font-bold uppercase text-forest-800 tracking-wider">
+            Choose License Scope
           </h4>
 
           <div className="space-y-2">
-            {/* Single User Option */}
+            {/* Single User */}
             <label
               onClick={() => {
                 setLicenseType("SINGLE_USER");
                 setSeatCount(1);
               }}
-              className={`flex items-start gap-3 p-3.5 rounded-2xl border cursor-pointer transition ${
+              className={`flex items-start gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
                 licenseType === "SINGLE_USER"
-                  ? "border-[#4F5B32] bg-[#F1E8C7]/70 shadow-2xs"
-                  : "border-[#A38345]/30 bg-[#FAF7EE] hover:bg-[#F1E8C7]/40"
+                  ? "border-forest-700 bg-paper-200 ring-1 ring-forest-700/20 shadow-editorial-xs"
+                  : "border-paper-400 bg-paper-50 hover:bg-paper-200/60"
               }`}
             >
               <input
@@ -140,25 +146,25 @@ export function ProductPurchaseCard({
                 name="license"
                 checked={licenseType === "SINGLE_USER"}
                 onChange={() => {}}
-                className="mt-1 text-[#4F5B32] focus:ring-[#4F5B32]"
+                className="mt-1 text-forest-700 focus:ring-forest-700"
               />
-              <div className="text-xs font-serif">
-                <span className="font-bold text-[#28291F] flex items-center gap-1.5">
-                  <UserCheck className="w-3.5 h-3.5 text-[#4F5B32]" /> Individual Classroom Folio
+              <div className="text-xs">
+                <span className="font-bold text-ink-900 flex items-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-forest-700" /> Individual Classroom License
                 </span>
-                <p className="text-[#555745] mt-0.5">
-                  For use by one master educator in their personal classroom archive.
+                <p className="text-ink-500 mt-0.5 leading-relaxed">
+                  For use by one educator in their personal classroom and student roster.
                 </p>
               </div>
             </label>
 
-            {/* School / Multi-Seat Option */}
+            {/* School Seat */}
             <label
               onClick={() => setLicenseType("SCHOOL_SEAT")}
-              className={`flex items-start gap-3 p-3.5 rounded-2xl border cursor-pointer transition ${
+              className={`flex items-start gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
                 licenseType === "SCHOOL_SEAT"
-                  ? "border-[#4F5B32] bg-[#F1E8C7]/70 shadow-2xs"
-                  : "border-[#A38345]/30 bg-[#FAF7EE] hover:bg-[#F1E8C7]/40"
+                  ? "border-forest-700 bg-paper-200 ring-1 ring-forest-700/20 shadow-editorial-xs"
+                  : "border-paper-400 bg-paper-50 hover:bg-paper-200/60"
               }`}
             >
               <input
@@ -166,44 +172,48 @@ export function ProductPurchaseCard({
                 name="license"
                 checked={licenseType === "SCHOOL_SEAT"}
                 onChange={() => {}}
-                className="mt-1 text-[#4F5B32] focus:ring-[#4F5B32]"
+                className="mt-1 text-forest-700 focus:ring-forest-700"
               />
-              <div className="text-xs font-serif flex-1">
+              <div className="text-xs flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#28291F] flex items-center gap-1.5">
-                    <School className="w-3.5 h-3.5 text-[#A38345]" /> Multi-Seat Department License
+                  <span className="font-bold text-ink-900 flex items-center gap-1.5">
+                    <School className="w-3.5 h-3.5 text-brass-500" /> Multi-Seat School License
                   </span>
-                  <span className="text-[10px] font-bold text-[#3B4425] bg-[#E4E8D2] px-2 py-0.5 rounded border border-[#9CA763]">
+                  <span className="text-[10px] font-bold text-forest-800 bg-forest-100 px-2 py-0.5 rounded-full border border-forest-200">
                     Save 15%
                   </span>
                 </div>
-                <p className="text-[#555745] mt-0.5">
-                  Institutionally owned, transferable across grade-level colleagues.
+                <p className="text-ink-500 mt-0.5 leading-relaxed">
+                  Institutionally owned license transferable across department colleagues.
                 </p>
 
                 {/* Seat Stepper */}
                 {licenseType === "SCHOOL_SEAT" && (
-                  <div className="mt-3 flex items-center gap-3 pt-2.5 border-t border-[#A38345]/20">
-                    <span className="font-semibold text-[#28291F]">Teacher Seats:</span>
-                    <div className="flex items-center border border-[#A38345]/40 rounded-xl overflow-hidden bg-[#FAF7EE]">
+                  <div className="mt-3 flex items-center justify-between pt-2.5 border-t border-paper-300">
+                    <span className="font-semibold text-ink-900">Teacher Seats:</span>
+                    <div className="flex items-center border border-paper-400 rounded-xl overflow-hidden bg-paper-50 shadow-2xs">
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSeatCount((c) => Math.max(1, c - 1));
                         }}
-                        className="px-3 py-1 bg-[#F1E8C7] hover:bg-[#e4d9b0] font-bold text-[#28291F]"
+                        className="btn-tactile px-3 py-1 bg-paper-200 hover:bg-paper-300 font-bold text-ink-900 transition"
+                        aria-label="Decrease seat count"
                       >
                         -
                       </button>
-                      <span className="px-3.5 py-1 font-bold text-[#28291F]">{seatCount}</span>
+                      <span className="px-3.5 py-1 font-bold text-ink-900 tabular-nums">
+                        {seatCount}
+                      </span>
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSeatCount((c) => c + 1);
                         }}
-                        className="px-3 py-1 bg-[#F1E8C7] hover:bg-[#e4d9b0] font-bold text-[#28291F]"
+                        className="btn-tactile px-3 py-1 bg-paper-200 hover:bg-paper-300 font-bold text-ink-900 transition"
+                        aria-label="Increase seat count"
                       >
                         +
                       </button>
@@ -216,20 +226,25 @@ export function ProductPurchaseCard({
         </div>
       )}
 
-      {/* Action Buttons */}
+      {/* Primary Actions */}
       <div className="space-y-3 pt-2">
         <button
           onClick={handleAddToCart}
-          className={`w-full py-3.5 px-4 rounded-2xl font-serif font-bold text-sm flex items-center justify-center gap-2 transition shadow-sm border ${
+          className={`btn-tactile w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-editorial-xs ${
             isInCart
-              ? "bg-[#E4E8D2] text-[#3B4425] border-[#9CA763]"
-              : "bg-[#4F5B32] hover:bg-[#3B4425] text-[#FAF7EE] border-[#A38345]/40 shadow-md"
+              ? "bg-forest-100 text-forest-800 border border-forest-300"
+              : "bg-forest-700 hover:bg-forest-600 text-paper-50 border border-forest-800"
           }`}
         >
-          {isInCart ? (
+          {addedAnimation ? (
             <>
-              <CheckCircle2 className="w-4 h-4 text-[#3B4425]" />
-              <span>In Vault (Add Another)</span>
+              <Check className="w-4 h-4 text-white" />
+              <span>Added to Cart!</span>
+            </>
+          ) : isInCart ? (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-forest-700" />
+              <span>In Cart Vault (Add Another Seat)</span>
             </>
           ) : (
             <>
@@ -241,68 +256,70 @@ export function ProductPurchaseCard({
 
         <button
           onClick={handleBuyNow}
-          className="w-full py-3.5 px-4 bg-[#28291F] hover:bg-black text-[#FAF7EE] rounded-2xl font-serif font-bold text-sm flex items-center justify-center gap-2 transition shadow-md border border-[#A38345]/30"
+          className="btn-tactile w-full py-3.5 px-4 bg-ink-900 hover:bg-black text-paper-50 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-editorial-xs border border-ink-900"
         >
-          <Zap className="w-4 h-4 text-[#A38345]" />
-          <span>{isFree ? "Acquire Complimentary Folio" : "Acquire Now"}</span>
+          <Zap className="w-4 h-4 text-brass-300" />
+          <span>{isFree ? "Download Complimentary Folio" : "Instant Checkout"}</span>
         </button>
       </div>
 
-      {/* Resource Spec List */}
-      <div className="pt-4 border-t border-[#F1E8C7] space-y-2.5 text-xs font-serif text-[#555745]">
+      {/* Curriculum Specifications */}
+      <div className="pt-4 border-t border-paper-300 space-y-2 text-xs text-ink-600">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-[#555745]">
-            <FileText className="w-3.5 h-3.5 text-[#A38345]" /> Manuscript Length:
+          <span className="flex items-center gap-1.5 text-ink-500">
+            <FileText className="w-3.5 h-3.5 text-brass-500" /> Total Length:
           </span>
-          <span className="font-bold text-[#28291F]">{pageCount} folios / pages</span>
+          <span className="font-bold text-ink-900 tabular-nums">{pageCount} pages</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[#555745]">Included Formats:</span>
-          <span className="font-bold text-[#28291F]">{fileFormats}</span>
+          <span className="text-ink-500">File Formats:</span>
+          <span className="font-bold text-ink-900 truncate max-w-[180px] text-right">
+            {fileFormats}
+          </span>
         </div>
         {isEaselReady && (
-          <div className="flex items-center justify-between text-[#4F5B32] font-semibold bg-[#E4E8D2]/50 p-2 rounded-xl border border-[#9CA763]/50">
-            <span className="flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-[#A38345]" /> Digital Assignment:
+          <div className="flex items-center justify-between text-forest-800 font-semibold bg-forest-100 p-2.5 rounded-xl border border-forest-200">
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-brass-500" /> Digital Activity:
             </span>
             <span className="font-bold">Easel Ready</span>
           </div>
         )}
       </div>
 
-      {/* Seller Box */}
-      <div className="pt-4 border-t border-[#F1E8C7] flex items-center justify-between">
+      {/* Teacher Store Mini Card */}
+      <div className="pt-4 border-t border-paper-300 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img
-            src={sellerAvatarUrl || "https://placehold.co/150"}
+            src={sellerAvatarUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150"}
             alt={sellerStoreName}
-            className="w-11 h-11 rounded-2xl object-cover border-2 border-[#9CA763]"
+            className="w-10 h-10 rounded-xl object-cover border border-paper-400 shadow-2xs"
           />
           <div>
-            <h4 className="text-xs font-serif font-bold text-[#28291F] line-clamp-1">{sellerStoreName}</h4>
-            <div className="flex items-center gap-1 text-[11px] font-serif text-[#A38345] font-bold">
+            <h4 className="text-xs font-bold text-ink-900 line-clamp-1">{sellerStoreName}</h4>
+            <div className="flex items-center gap-1 text-[11px] text-brass-600 font-bold">
               <span>★ {sellerRating.toFixed(1)}</span>
-              <span className="text-[#555745] font-normal">({sellerRatingCount})</span>
+              <span className="text-ink-500 font-normal tabular-nums">({sellerRatingCount})</span>
             </div>
           </div>
         </div>
 
         <button
           onClick={() => setIsFollowing((f) => !f)}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-serif font-semibold transition border ${
+          className={`btn-tactile px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
             isFollowing
-              ? "bg-[#E4E8D2] text-[#3B4425] border-[#9CA763]"
-              : "bg-[#F1E8C7] hover:bg-[#e4d9b0] text-[#28291F] border-[#A38345]/30"
+              ? "bg-forest-100 text-forest-800 border-forest-200"
+              : "bg-paper-200 hover:bg-paper-300 text-ink-900 border-paper-400"
           }`}
         >
-          {isFollowing ? "Following Scholar" : "+ Follow"}
+          {isFollowing ? "Following" : "+ Follow"}
         </button>
       </div>
 
-      {/* Trust Notice */}
-      <div className="p-3.5 bg-[#F1E8C7]/50 rounded-2xl flex items-center gap-2.5 text-[11px] font-serif text-[#555745] border border-[#A38345]/20">
-        <ShieldCheck className="w-4 h-4 text-[#4F5B32] flex-shrink-0" />
-        <span>Instant download delivered to your library vault. Peer-reviewed scholarship.</span>
+      {/* Educator Guarantee */}
+      <div className="p-3 bg-paper-200 rounded-2xl flex items-center gap-2.5 text-[11px] text-ink-600 border border-paper-400">
+        <ShieldCheck className="w-4 h-4 text-forest-700 flex-shrink-0" />
+        <span>Instant download delivered to your permanent library vault upon order.</span>
       </div>
     </div>
   );

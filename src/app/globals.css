@@ -2,42 +2,192 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg-warm-paper: #FAF7EE;
-  --bg-milk-honey: #F1E8C7;
-  --matcha: #9CA763;
-  --deep-olive: #4F5B32;
-  --book-ink: #28291F;
-  --antique-brass: #A38345;
+@layer base {
+  :root {
+    --background: #FAF9F5;
+    --foreground: #1C1E18;
 
-  --background: #FAF7EE;
-  --foreground: #28291F;
+    --card: #F3EFE6;
+    --card-foreground: #1C1E18;
+
+    --border: #EAE4D5;
+    --input: #EAE4D5;
+
+    --primary: #2D3A22;
+    --primary-foreground: #FAF9F5;
+
+    --muted: #F3EFE6;
+    --muted-foreground: #4D5244;
+
+    --accent: #9C7A3C;
+    --accent-foreground: #1C1E18;
+  }
+
+  * {
+    border-color: #EAE4D5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    color: var(--foreground);
+    background-color: var(--background);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Editorial Titles & Headings */
+  h1, h2, h3, h4, .font-editorial {
+    font-family: Newsreader, Lora, Fraunces, Georgia, Cambria, serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* Browser Surfacing Crafts (Craft Floor verification) */
+  ::selection {
+    background-color: #E4E9DC;
+    color: #171E11;
+  }
+
+  input, textarea, select {
+    caret-color: #2D3A22;
+  }
+
+  /* Accessible Focus Rings */
+  :focus-visible {
+    outline: 2px solid #2D3A22;
+    outline-offset: 2px;
+  }
+
+  /* Custom Parchment Scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F3EFE6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #DDD4C1;
+    border-radius: 4px;
+    border: 2px solid #F3EFE6;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9C7A3C;
+  }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Tactile Button Feedback (Impeccable & UI-UX-Pro-Max) */
+  .btn-tactile {
+    @apply transition-all duration-200 active:scale-[0.98] select-none cursor-pointer;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-tactile:active {
+    filter: brightness(0.96);
+  }
+
+  /* Card Depth & Layered Surfaces */
+  .card-depth {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-depth:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px -6px rgba(28, 30, 24, 0.12), 0 6px 14px -2px rgba(28, 30, 24, 0.05);
+  }
+
+  .card-depth-subtle {
+    @apply transition-all duration-200;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-depth-subtle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -2px rgba(28, 30, 24, 0.08);
+  }
+
+  /* Glass Parchment Surface */
+  .glass-parchment {
+    background-color: rgba(250, 249, 245, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Scholastic Gold Foil Border Highlight */
+  .border-foil {
+    border-image: linear-gradient(to bottom, #D8C26E, #9C7A3C, #B8934A) 1;
+  }
+
+  /* 3D Arc & Semi-Circle Cylindrical Carousel Utilities */
+  .perspective-1200 {
+    perspective: 1200px;
+    perspective-origin: center 40%;
+  }
+
+  .perspective-book {
+    perspective: 1600px;
+    perspective-origin: center 45%;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  /* Semi-circular decorative track ring with subtle gradient */
+  .arc-track-ring {
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+
+  /* Paper curl bend gradients (illuminating page curve into the spine) */
+  .paper-curl-left {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 30%, rgba(45, 35, 20, 0.04) 80%, rgba(28, 20, 10, 0.18) 100%);
+  }
+
+  .paper-curl-right {
+    background-image: linear-gradient(to left, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 30%, rgba(45, 35, 20, 0.04) 80%, rgba(28, 20, 10, 0.18) 100%);
+  }
+
+  /* Leaf stack edge ridge: layered book leaves resting behind */
+  .leaf-stack-left {
+    box-shadow: -4px 3px 0px rgba(221, 212, 193, 0.65), -8px 6px 0px rgba(234, 228, 213, 0.45), -14px 10px 24px rgba(28, 30, 24, 0.16);
+  }
+
+  .leaf-stack-right {
+    box-shadow: 4px 3px 0px rgba(221, 212, 193, 0.65), 8px 6px 0px rgba(234, 228, 213, 0.45), 14px 10px 24px rgba(28, 30, 24, 0.16);
+  }
+
+  .leaf-center-elevation {
+    box-shadow: 0 24px 50px -10px rgba(28, 30, 24, 0.22), 0 8px 20px -4px rgba(156, 122, 60, 0.2);
+  }
 }
 
-/* Typography polish for classic scholastic aesthetic */
-h1, h2, h3, h4, h5, h6 {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  letter-spacing: -0.01em;
-}
-
-/* Custom classic scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #F1E8C7;
-}
-::-webkit-scrollbar-thumb {
-  background: #A38345;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #4F5B32;
+/* Reduced Motion Preference Respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

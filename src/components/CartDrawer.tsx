@@ -1,36 +1,64 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useCart } from "./CartContext";
 import { formatPrice } from "@/lib/utils";
-import { X, Trash2, ShoppingBag, ShieldCheck, ArrowRight, School } from "lucide-react";
+import { X, Trash2, ShoppingBag, ShieldCheck, ArrowRight, School, UserCheck } from "lucide-react";
 
 export function CartDrawer() {
   const { items, isDrawerOpen, setIsDrawerOpen, removeFromCart, updateSeats, subtotalCents } = useCart();
 
+  // Close on Escape key
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsDrawerOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset";
+    };
+  }, [isDrawerOpen, setIsDrawerOpen]);
+
   if (!isDrawerOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Shopping Cart Drawer"
+      className="fixed inset-0 z-50 overflow-hidden font-sans"
+    >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[#28291F]/60 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-ink-900/60 backdrop-blur-xs transition-opacity duration-300 animate-fade-in"
         onClick={() => setIsDrawerOpen(false)}
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#FAF7EE] shadow-2xl flex flex-col border-l border-[#A38345]/30">
-          {/* Header */}
-          <div className="p-5 border-b border-[#F1E8C7] flex items-center justify-between bg-[#F1E8C7]/60">
+        <div className="w-screen max-w-md bg-paper-100 shadow-editorial-xl flex flex-col border-l border-paper-400 animate-fade-in">
+          {/* Drawer Header */}
+          <div className="p-5 border-b border-paper-300 flex items-center justify-between bg-paper-200">
             <div className="flex items-center gap-2.5">
-              <ShoppingBag className="w-5 h-5 text-[#4F5B32]" />
-              <h2 className="font-serif font-bold text-[#28291F] text-lg">Curriculum Vault Cart ({items.length})</h2>
+              <div className="w-8 h-8 rounded-lg bg-forest-700 text-paper-50 flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4 text-brass-300" />
+              </div>
+              <div>
+                <h2 className="font-serif font-black text-ink-900 text-base leading-none">
+                  Curriculum Vault Cart
+                </h2>
+                <span className="text-[11px] text-ink-500 font-sans mt-0.5 block tabular-nums">
+                  {items.length} {items.length === 1 ? "resource" : "resources"} selected
+                </span>
+              </div>
             </div>
             <button
               onClick={() => setIsDrawerOpen(false)}
-              className="p-1.5 rounded-full text-[#555745] hover:text-[#28291F] hover:bg-[#F1E8C7] transition-colors"
+              className="btn-tactile p-2 rounded-xl text-ink-600 hover:text-ink-900 hover:bg-paper-300 transition-colors focus-visible:ring-2 focus-visible:ring-forest-700"
+              aria-label="Close Cart"
             >
               <X className="w-5 h-5" />
             </button>
@@ -39,24 +67,30 @@ export function CartDrawer() {
           {/* Cart Items List */}
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {items.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#555745]">
-                <ShoppingBag className="w-12 h-12 text-[#A38345]/50 mb-3" />
-                <p className="text-base font-serif font-bold text-[#28291F]">Your cart vault is empty</p>
-                <p className="text-xs font-serif text-[#555745] mt-1 mb-6">Explore peer-reviewed manuscripts and teacher folios to begin.</p>
-                <button
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-ink-500">
+                <div className="w-16 h-16 rounded-2xl bg-paper-200 border border-paper-400 flex items-center justify-center text-brass-500 mb-4 shadow-editorial-xs">
+                  <ShoppingBag className="w-8 h-8" />
+                </div>
+                <h3 className="text-base font-serif font-bold text-ink-900">Your cart vault is empty</h3>
+                <p className="text-xs text-ink-500 mt-1.5 mb-6 max-w-xs leading-relaxed">
+                  Discover peer-reviewed lesson folios, decodable units, and interactive Easel activities to begin.
+                </p>
+                <Link
+                  href="/search"
                   onClick={() => setIsDrawerOpen(false)}
-                  className="px-5 py-2.5 bg-[#4F5B32] text-[#FAF7EE] rounded-xl text-xs font-serif font-bold hover:bg-[#3B4425] transition border border-[#A38345]/30 shadow-xs"
+                  className="btn-tactile px-5 py-2.5 bg-forest-700 hover:bg-forest-600 text-paper-50 rounded-xl text-xs font-bold transition shadow-editorial-xs"
                 >
                   Explore Catalog
-                </button>
+                </Link>
               </div>
             ) : (
               items.map((item) => (
                 <div
                   key={item.productId}
-                  className="flex gap-3.5 p-4 bg-[#FAF7EE] border border-[#A38345]/30 rounded-2xl shadow-2xs hover:border-[#4F5B32] transition"
+                  className="flex gap-3.5 p-4 bg-paper-50 border border-paper-400 rounded-2xl shadow-editorial-xs hover:border-forest-700 transition-colors"
                 >
-                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-[#F1E8C7] flex-shrink-0 border border-[#A38345]/20">
+                  {/* Thumbnail */}
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-paper-200 flex-shrink-0 border border-paper-400">
                     <img
                       src={item.coverImageUrl}
                       alt={item.title}
@@ -64,52 +98,68 @@ export function CartDrawer() {
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <Link
-                      href={`/product/${item.slug}`}
-                      onClick={() => setIsDrawerOpen(false)}
-                      className="text-xs font-serif font-bold text-[#28291F] line-clamp-2 hover:text-[#4F5B32] transition-colors leading-snug"
-                    >
-                      {item.title}
-                    </Link>
-                    <p className="text-[11px] font-serif text-[#555745] mt-0.5">By <span className="font-semibold text-[#28291F]">{item.sellerStoreName}</span></p>
+                  {/* Details */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div>
+                      <Link
+                        href={`/product/${item.slug}`}
+                        onClick={() => setIsDrawerOpen(false)}
+                        className="text-xs font-serif font-bold text-ink-900 line-clamp-2 hover:text-forest-700 transition-colors leading-snug"
+                      >
+                        {item.title}
+                      </Link>
+                      <p className="text-[11px] text-ink-500 mt-0.5 truncate">
+                        By <span className="font-semibold text-ink-800">{item.sellerStoreName}</span>
+                      </p>
 
-                    <div className="flex items-center gap-1.5 mt-2">
-                      <span className="text-[10px] font-serif font-medium px-2 py-0.5 bg-[#F1E8C7] text-[#28291F] rounded-md border border-[#A38345]/20">
-                        {item.licenseType === "SCHOOL_SEAT" ? (
-                          <span className="flex items-center gap-1">
-                            <School className="w-3 h-3 text-[#A38345]" /> School Department License
-                          </span>
-                        ) : (
-                          "Classroom License"
-                        )}
-                      </span>
+                      <div className="mt-1.5">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 bg-paper-200 text-forest-800 rounded-md border border-paper-400">
+                          {item.licenseType === "SCHOOL_SEAT" ? (
+                            <>
+                              <School className="w-3 h-3 text-brass-500" />
+                              <span>School Department License</span>
+                            </>
+                          ) : (
+                            <>
+                              <UserCheck className="w-3 h-3 text-forest-700" />
+                              <span>Classroom License</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center justify-between mt-3 pt-2 border-t border-[#F1E8C7]">
-                      <div className="flex items-center border border-[#A38345]/40 rounded-xl overflow-hidden text-xs bg-[#F1E8C7]/50">
+                    {/* Quantity & Price */}
+                    <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-paper-300">
+                      {/* Seat Stepper */}
+                      <div className="flex items-center border border-paper-400 rounded-lg overflow-hidden bg-paper-50 shadow-2xs">
                         <button
                           onClick={() => updateSeats(item.productId, item.seatCount - 1)}
-                          className="px-2 py-1 bg-[#F1E8C7] hover:bg-[#e4d9b0] font-bold text-[#28291F]"
+                          className="btn-tactile px-2 py-0.5 bg-paper-200 hover:bg-paper-300 text-ink-900 font-bold text-xs transition"
+                          aria-label="Decrease seat count"
                         >
                           -
                         </button>
-                        <span className="px-2.5 py-1 font-serif font-bold text-[#28291F]">{item.seatCount}</span>
+                        <span className="px-2.5 py-0.5 font-bold text-xs text-ink-900 tabular-nums">
+                          {item.seatCount}
+                        </span>
                         <button
                           onClick={() => updateSeats(item.productId, item.seatCount + 1)}
-                          className="px-2 py-1 bg-[#F1E8C7] hover:bg-[#e4d9b0] font-bold text-[#28291F]"
+                          className="btn-tactile px-2 py-0.5 bg-paper-200 hover:bg-paper-300 text-ink-900 font-bold text-xs transition"
+                          aria-label="Increase seat count"
                         >
                           +
                         </button>
                       </div>
 
                       <div className="flex items-center gap-2.5">
-                        <span className="text-sm font-serif font-extrabold text-[#28291F]">
+                        <span className="text-sm font-bold text-ink-900 tabular-nums">
                           {formatPrice(item.priceCents * item.seatCount)}
                         </span>
                         <button
                           onClick={() => removeFromCart(item.productId)}
-                          className="p-1 text-[#555745] hover:text-red-700 transition-colors"
+                          className="btn-tactile p-1 text-ink-400 hover:text-terracotta-600 transition-colors rounded"
+                          aria-label={`Remove ${item.title} from cart`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -121,23 +171,27 @@ export function CartDrawer() {
             )}
           </div>
 
-          {/* Footer / Checkout */}
+          {/* Drawer Footer */}
           {items.length > 0 && (
-            <div className="p-5 border-t border-[#F1E8C7] bg-[#F1E8C7]/60 space-y-3.5">
-              <div className="flex items-center justify-between text-xs font-serif text-[#555745]">
+            <div className="p-5 border-t border-paper-300 bg-paper-200 space-y-3.5">
+              <div className="flex items-center justify-between text-xs text-ink-600">
                 <span>Vault Subtotal</span>
-                <span className="font-serif font-black text-[#28291F] text-lg">{formatPrice(subtotalCents)}</span>
+                <span className="font-serif font-black text-ink-900 text-xl tabular-nums">
+                  {formatPrice(subtotalCents)}
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-serif text-[#3B4425] bg-[#E4E8D2] p-2.5 rounded-xl border border-[#9CA763]">
-                <ShieldCheck className="w-4 h-4 text-[#4F5B32] flex-shrink-0" />
-                <span>Instant library vault delivery & permanent backup</span>
+
+              <div className="flex items-center gap-2 text-xs text-forest-800 bg-forest-100 p-2.5 rounded-xl border border-forest-200">
+                <ShieldCheck className="w-4 h-4 text-forest-700 flex-shrink-0" />
+                <span>Instant library vault delivery & permanent license backup</span>
               </div>
+
               <Link
                 href="/checkout"
                 onClick={() => setIsDrawerOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#4F5B32] hover:bg-[#3B4425] text-[#FAF7EE] rounded-2xl font-serif font-bold text-sm shadow-md transition border border-[#A38345]/40"
+                className="btn-tactile w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-forest-700 hover:bg-forest-600 text-paper-50 rounded-xl font-bold text-sm shadow-editorial transition-all border border-forest-850"
               >
-                <span>Proceed to Scholastic Checkout</span>
+                <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
