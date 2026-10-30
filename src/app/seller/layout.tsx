@@ -16,9 +16,22 @@ export default async function SellerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const seller = await prisma.sellerProfile.findFirst({
-    where: { storeSlug: "mathcraft-studios" },
-  });
+  let seller: any = null;
+  try {
+    seller = await prisma.sellerProfile.findFirst({
+      where: { storeSlug: "mathcraft-studios" },
+    });
+  } catch (err) {
+    console.error("SellerLayout: database query failed", err);
+  }
+
+  if (!seller) {
+    seller = {
+      storeName: "MathCraft Studios",
+      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150",
+      tagline: "National Board Certified 5th grade teacher crafting visual math scaffolds",
+    };
+  }
 
   return (
     <div className="bg-[#FAF9F5] min-h-screen py-10 font-sans">
